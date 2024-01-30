@@ -1,0 +1,6 @@
+@HMOManagerAPI_HostAddress = http://localhost:5037
+
+GET {{HMOManagerAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
