@@ -16,7 +16,21 @@ builder.Configuration.AddJsonFile("appsettings.json");
 if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowSpecificOrigin",
+            builder =>
+            {
+                builder.WithOrigins("http://127.0.0.1:5173") // Replace with your React app's origin
+                       .AllowAnyHeader()
+                       .AllowAnyMethod()
+                       .AllowCredentials(); // Enable if you're using credentials (e.g., cookies)
+            });
+    });
 }
+
+
 
 builder.Services.AddControllers();
 
@@ -57,6 +71,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
