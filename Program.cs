@@ -1,8 +1,10 @@
 using HMOManagerAPI.Authentication;
 using HMOManagerAPI.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 using System.Text;
 
@@ -30,8 +32,6 @@ if (builder.Environment.IsDevelopment())
     });
 }
 
-
-
 builder.Services.AddControllers();
 
 var connectionString = builder.Configuration["ConnectionStrings:ConnStr"];
@@ -46,17 +46,26 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 
 // Adding Authentication
-
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddCookie(options =>
+
+// Adding Jwt Bearer
+.AddJwtBearer(options =>
 {
-    options.LoginPath = "/"; // Specify the login page URL
-    options.AccessDeniedPath = "/AccessDenied"; // Specify the access denied page URL
+    options.SaveToken = true;
+    options.RequireHttpsMetadata = false;
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = builder.Configuration["JWT:ValidAudience"],
+        ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+    };
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
