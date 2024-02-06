@@ -11,7 +11,7 @@ namespace HMOManagerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticateController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration) : ControllerBase
+    public class AuthenticateController(UserManager<ApplicationUser> userManager, IConfiguration configuration) : ControllerBase
     {
         private readonly UserManager<ApplicationUser> userManager = userManager;
         private readonly IConfiguration _configuration = configuration;
