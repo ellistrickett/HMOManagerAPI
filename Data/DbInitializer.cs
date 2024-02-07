@@ -104,6 +104,6 @@ public class DbInitializer
 
         bool tenantsSeeded = context.Tenants.Any();
 
-        return sitesSeeded && roomsSeeded && tenantsSeeded;
+        return sitesSeeded || roomsSeeded || tenantsSeeded;
     }
 }
