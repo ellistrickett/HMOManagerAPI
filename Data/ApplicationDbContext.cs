@@ -2,6 +2,7 @@
 using HMOManagerAPI.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
 
 namespace HMOManagerAPI.Data
 {
@@ -26,6 +27,9 @@ namespace HMOManagerAPI.Data
                 .WithMany(r => r.Tenants)
                 .HasForeignKey(t => t.RoomId)
                 .OnDelete(DeleteBehavior.Cascade);
+            
         }
+
+
     }
 }

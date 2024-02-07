@@ -4,7 +4,7 @@ namespace HMOManagerAPI.Models
 {
     public class Site
     {
-        public required int SiteId { get; set; }
+        public int SiteId { get; set; }
         [MaxLength(250)]
         public required string Name { get; set; }
         [MaxLength(500)]

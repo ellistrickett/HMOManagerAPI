@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Reflection.Metadata;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +38,10 @@ builder.Services.AddControllers();
 var connectionString = builder.Configuration["ConnectionStrings:ConnStr"];
 
 // For Entity Framework
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr")));
+builder.Services.AddDbContext<ApplicationDbContext>(options => {
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr"));
+    options.EnableSensitiveDataLogging();
+});
 
 // For Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -72,6 +76,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -89,6 +94,15 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+var serviceProvider = app.Services;
+
+using (var scope = serviceProvider.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    DbInitializer.Initialize(context, serviceProvider);
+}
 
 app.MapControllers();
 

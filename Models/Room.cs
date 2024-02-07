@@ -4,7 +4,7 @@ namespace HMOManagerAPI.Models
 {
     public class Room
     {
-        public required int RoomId { get; set; }
+        public int RoomId { get; set; }
         [MaxLength(100)]
         public required string Name { get; set; }
         public required bool IsOccupied { get; set; }
