@@ -39,6 +39,18 @@ namespace HMOManagerAPI.Controllers
             return Ok(room);
         }
 
+        [HttpGet("site-rooms/{id}")]
+        public IActionResult GetSiteRooms(int id)
+        {
+            var siteRooms = _dbContext.Sites.Where(site => site.SiteId == id).SelectMany(site => site.Rooms).ToList();
+            if (siteRooms == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(siteRooms);
+        }
+
         [HttpGet("occupied")]
         public IActionResult GetOccupiedRooms()
         {
