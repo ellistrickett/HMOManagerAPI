@@ -65,7 +65,7 @@ public class DbInitializer
             {
                 rooms.Add(new Room
                 {
-                    Name = $"Room {roomIndex}",
+                    Name = $"Room {roomIndex + 1}",
                     IsOccupied = random.Next(0, 2) == 1,
                     MovedInDate = DateTime.Now.AddDays(-random.Next(1, 365)),
                     ContractEndDate = DateTime.Now.AddDays(random.Next(1, 365)),

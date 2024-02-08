@@ -2,6 +2,7 @@
 using HMOManagerAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HMOManagerAPI.Controllers
 {
@@ -36,6 +37,29 @@ namespace HMOManagerAPI.Controllers
                 return NotFound();
             }
             return Ok(room);
+        }
+
+        [HttpGet("occupied")]
+        public IActionResult GetOccupiedRooms()
+        {
+            var occupiedRooms = _dbContext.Rooms.Where(r => r.IsOccupied == true).ToList();
+            var occupiedRoomInfoList = new List<OccupiedRoomInfoDto>();
+
+            foreach (var room in occupiedRooms)
+            {
+                if (room.RentDueDate.HasValue)
+                {
+                    occupiedRoomInfoList.Add(new OccupiedRoomInfoDto
+                    {
+                        RoomId = room.RoomId,
+                        Name = room.Name,
+                        RentDueDate = room.RentDueDate.Value,
+                        RentAmount = room.RentAmount
+                    });
+                }
+            }
+
+            return Ok(occupiedRoomInfoList);
         }
 
         [HttpPut("{id}")]
