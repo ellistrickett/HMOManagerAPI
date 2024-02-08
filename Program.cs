@@ -88,8 +88,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowSpecificOrigin");
 
-app.UseHttpsRedirection();
-
 //cookie
 app.UseAuthentication();
 
